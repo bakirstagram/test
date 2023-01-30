@@ -15,6 +15,7 @@ public class BookRepositoryImpl implements BookRepository {
     private static final BookMapper BOOK_MAPPER = new BookMapper();
 
     private static final String FIND_ALL_QUERY = "SELECT * FROM book b ORDER BY b.title DESC";
+    private static final String FIND_BY_ID_QUERY = "SELECT * FROM book order by id desc limit 1";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -35,7 +36,7 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     @Transactional
     public Book save(Book book) {
-        Book lastBook = jdbcTemplate.queryForObject("SELECT * FROM book order by id desc limit 1", BOOK_MAPPER);
+        Book lastBook = jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, BOOK_MAPPER);
 
         if (lastBook == null) {
             lastBook = new Book();

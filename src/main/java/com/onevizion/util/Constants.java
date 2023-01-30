@@ -8,6 +8,9 @@ public final class Constants {
 
     public static final int STRING_FIELDS_LENGTH = 150;
 
+    public static final String VALIDATION_ERROR = "Validation error.";
+    public static final String VALIDATION_VALUE_ERROR = "Invalid value.";
+
     public static final String DB_DRIVER_PROPERTY = "db.driver";
     public static final String DB_URL_PROPERTY = "db.url";
     public static final String DB_USERNAME_PROPERTY = "db.username";

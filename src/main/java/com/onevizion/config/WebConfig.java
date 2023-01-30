@@ -12,7 +12,7 @@ import java.util.List;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan("com.onevizion")
+@ComponentScan("com.onevizion.*")
 @PropertySource("classpath:database.properties")
 public class WebConfig implements WebMvcConfigurer {
 

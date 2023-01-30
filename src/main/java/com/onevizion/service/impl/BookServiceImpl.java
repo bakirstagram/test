@@ -4,7 +4,6 @@ import com.onevizion.model.Book;
 import com.onevizion.repository.BookRepository;
 import com.onevizion.repository.impl.BookRepositoryImpl;
 import com.onevizion.service.BookService;
-import com.onevizion.util.Constants;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,13 +24,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book save(Book book) {
-        if (book != null)
-            if (book.getTitle() != null && book.getDescription() != null && book.getAuthor() != null)
-                if (!(book.getTitle().length() > Constants.STRING_FIELDS_LENGTH ||
-                        book.getAuthor().length() > Constants.STRING_FIELDS_LENGTH ||
-                        book.getDescription().length() > Constants.STRING_FIELDS_LENGTH))
-                    return repository.save(book);
-        throw new RuntimeException("Book is not valid! ");
+        return repository.save(book);
     }
 
     @Override
@@ -41,9 +34,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> findAllByCountAndSort(Character c) {
-        if (!c.equals(' ') || !c.toString().isEmpty())
-            return repository.findAllByCountAndSort(c);
-        throw new RuntimeException("Character must be only one and shouldn't contain any spaces! ");
+        return repository.findAllByCountAndSort(c);
     }
 
 

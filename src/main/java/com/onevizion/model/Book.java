@@ -1,10 +1,24 @@
 package com.onevizion.model;
 
+import com.onevizion.util.Constants;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
+
 public class Book {
 
     private Long id;
+
+    @NotNull
+    @Length(max = Constants.STRING_FIELDS_LENGTH)
     private String title;
+
+    @NotNull
+    @Length(max = Constants.STRING_FIELDS_LENGTH)
     private String description;
+
+    @NotNull
+    @Length(max = Constants.STRING_FIELDS_LENGTH)
     private String author;
 
     public Long getId() {
