@@ -1,16 +1,11 @@
 package com.onevizion.model;
 
-
-public class    Book {
+public class Book {
 
     private Long id;
     private String title;
     private String description;
     private String author;
-
-    public Book() {
-
-    }
 
     public Long getId() {
         return id;

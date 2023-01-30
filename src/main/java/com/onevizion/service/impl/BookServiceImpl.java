@@ -1,23 +1,20 @@
 package com.onevizion.service.impl;
 
 import com.onevizion.model.Book;
-import com.onevizion.repository.CRUDRepository;
-import com.onevizion.repository.impl.BookRepository;
-import com.onevizion.service.CRUDService;
+import com.onevizion.repository.BookRepository;
+import com.onevizion.repository.impl.BookRepositoryImpl;
+import com.onevizion.service.BookService;
 import com.onevizion.util.Constants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class BookService implements CRUDService<Book> {
+public class BookServiceImpl implements BookService {
 
-    private final CRUDRepository<Book> repository;
+    private final BookRepository repository;
 
-    @Autowired
-    public BookService(BookRepository repository) {
-
+    public BookServiceImpl(BookRepositoryImpl repository) {
         this.repository = repository;
     }
 

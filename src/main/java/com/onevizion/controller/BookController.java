@@ -1,9 +1,8 @@
 package com.onevizion.controller;
 
 import com.onevizion.model.Book;
-import com.onevizion.service.CRUDService;
-import com.onevizion.service.impl.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.onevizion.service.BookService;
+import com.onevizion.service.impl.BookServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -15,27 +14,25 @@ import java.util.stream.Collectors;
 @RequestMapping("/onevizion/books")
 public class BookController {
 
-    private final CRUDService<Book> bookService;
+    private final BookService bookService;
 
-    @Autowired
-    public BookController(BookService bookService) {
-        this.bookService = bookService;
+    public BookController(BookServiceImpl bookServiceImpl) {
+        this.bookService = bookServiceImpl;
     }
 
-    @GetMapping()
-    @ResponseBody
-    public Object findAll() {
-        return bookService.findAll();
+    @GetMapping
+    public ResponseEntity<List<Book>> findAll() {
+        return ResponseEntity.ok(bookService.findAll());
     }
 
     /**
-     * endpoint добавления новой книги в таблицу book
+     * Endpoint добавления новой книги в таблицу book
      *
      * @param book fields must contain a maximum of 149 characters
      */
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody Book book) {
-        return ResponseEntity.ok().body(bookService.save(book));
+    public ResponseEntity<Book> save(@RequestBody Book book) {
+        return ResponseEntity.ok(bookService.save(book));
     }
 
     /**
@@ -63,7 +60,7 @@ public class BookController {
                 collect(Collectors.
                         toMap(Book::getAuthor, book -> StringUtils.countOccurrencesOf(book.getTitle().toLowerCase(), c.toString().toLowerCase())));
 
-        return ResponseEntity.ok().body(
+        return ResponseEntity.ok(
                 map.entrySet().stream()
                         .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                         .limit(10)

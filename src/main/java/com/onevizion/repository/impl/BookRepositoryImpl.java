@@ -1,10 +1,8 @@
 package com.onevizion.repository.impl;
 
 import com.onevizion.model.Book;
-import com.onevizion.model.mapper.BookMapper;
-import com.onevizion.repository.CRUDRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import com.onevizion.mapper.BookMapper;
+import com.onevizion.repository.BookRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,18 +10,21 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Repository
-public class BookRepository implements CRUDRepository<Book> {
+public class BookRepositoryImpl implements BookRepository {
+
+    private static final BookMapper BOOK_MAPPER = new BookMapper();
+
+    private static final String FIND_ALL_QUERY = "SELECT * FROM book b ORDER BY b.title DESC";
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public BookRepository(JdbcTemplate jdbcTemplate) {
+    public BookRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
     public List<Book> findAll() {
-        return jdbcTemplate.query("SELECT * FROM book b ORDER BY b.title DESC", new BookMapper());
+        return jdbcTemplate.query(FIND_ALL_QUERY, BOOK_MAPPER);
     }
 
     /**
@@ -34,18 +35,18 @@ public class BookRepository implements CRUDRepository<Book> {
     @Override
     @Transactional
     public Book save(Book book) {
-        Book lastBook = jdbcTemplate.queryForObject("SELECT * FROM book order by id desc limit 1",
-                BeanPropertyRowMapper.newInstance(Book.class));
+        Book lastBook = jdbcTemplate.queryForObject("SELECT * FROM book order by id desc limit 1", BOOK_MAPPER);
 
         if (lastBook == null) {
             lastBook = new Book();
             lastBook.setId(1L);
-        } else
+        } else {
             lastBook.setId(lastBook.getId() + 1);
+        }
 
         return jdbcTemplate.queryForObject(
                 "INSERT INTO book (id, author, title, description) VALUES(?, ?, ?, ?) RETURNING id, author, title, description ",
-                new BookMapper(),
+                BOOK_MAPPER,
                 lastBook.getId(),
                 book.getAuthor(), book.getTitle(), book.getDescription());
     }
@@ -58,7 +59,7 @@ public class BookRepository implements CRUDRepository<Book> {
     @Override
     public List<Book> findAllBooksGroupByAuthor() {
         return jdbcTemplate.query("select sum(id) as id, STRING_AGG (description, ', ') as description, author, STRING_AGG (title, ', ') as title  from book group by author",
-                new BookMapper());
+                BOOK_MAPPER);
     }
 
     /**
@@ -72,7 +73,7 @@ public class BookRepository implements CRUDRepository<Book> {
                         " from book " +
                         " where (LOWER(COALESCE(title, '')) LIKE LOWER('%' || TRIM(CAST(? as text)) || '%'))" +
                         " group by author ", new Object[]{c.toString()},
-                new BookMapper());
+                BOOK_MAPPER);
     }
 
 }

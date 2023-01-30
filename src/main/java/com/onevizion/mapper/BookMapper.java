@@ -1,4 +1,4 @@
-package com.onevizion.model.mapper;
+package com.onevizion.mapper;
 
 import com.onevizion.model.Book;
 import org.springframework.jdbc.core.RowMapper;
@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class BookMapper implements RowMapper<Book> {
+
     @Override
     public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
         Book book = new Book();
@@ -16,4 +17,5 @@ public class BookMapper implements RowMapper<Book> {
         book.setTitle(rs.getString("title"));
         return book;
     }
+
 }
